@@ -9,7 +9,7 @@ function doPost(e) {
       sendText(updates.message.chat.id,CariBarangDariIDSheet(updates.message.text)); 
     }
 }
-//bot token/set?rl=xy
+
 function AmbilSheet1(){
   var rangeName = 'Sheet1!A2:C';
   var rows = Sheets.Spreadsheets.Values.get(SheetID, rangeName).values;
@@ -54,7 +54,6 @@ var data = {
   };
   UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/', data);
 }
-
 
 
 
