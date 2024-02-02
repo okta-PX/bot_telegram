@@ -1,0 +1,136 @@
+var token = "";
+var SheetID = "";
+
+
+function doPost(e) {
+  var stringJson = e.postData.getDataAsString();
+  var updates = JSON.parse(stringJson);
+
+  if (updates.message && updates.message.text) {
+    if (updates.message.text === "/site") {
+      // Menampilkan tombol-tombol utama
+      sendMainButtons(updates.message.chat.id);
+    } else {
+      // Memproses input selain /site
+      handleButtonInput(updates.message.chat.id, updates.message.text);
+    }
+  } else if (updates.callback_query) {
+    // Menanggapi aksi tombol yang diklik
+    handleCallbackQuery(updates.callback_query);
+  }
+}
+
+function AmbilSheet1() {
+  var rangeName = 'bot!A2:C';
+  var rows = Sheets.Spreadsheets.Values.get(SheetID, rangeName).values;
+  return rows || [];
+}
+
+function AmbilSheet2() {
+  var rangeName = 'bot2!A2:C';
+  var rows = Sheets.Spreadsheets.Values.get(SheetID, rangeName).values;
+  return rows || [];
+}
+
+function sendMainButtons(chatId) {
+  var buttons = [
+    [{ text: "Pajak", callback_data: "button_pajak" }],
+    [{ text: "Bank Indonesia", callback_data: "button_bi" }],
+    [{ text: "Pasar Senen", callback_data: "button_pasar_senen" }]
+  ];
+
+  var replyMarkup = { inline_keyboard: buttons };
+  sendText(chatId, "Pilih lokasi:", replyMarkup);
+}
+
+function sendSubButtons(chatId, buttonType) {
+  var buttons = [];
+
+  switch (buttonType) {
+    case "button_pajak":
+      buttons = [
+        [{ text: "Config", callback_data: "sub_button_config_pajak" }],
+        [{ text: "SDB", callback_data: "sub_button_sdb_pajak" }]
+      ];
+      break;
+
+    case "button_bi":
+      buttons = [
+        [{ text: "Config", callback_data: "sub_button_config_bi" }],
+        [{ text: "SDB", callback_data: "sub_button_sdb_bi" }]
+      ];
+      break;
+
+    // Add more cases as needed for other buttons
+
+    default:
+      // Handle unknown button type
+  }
+
+  var replyMarkup = { inline_keyboard: buttons };
+  sendText(chatId, "Pilih opsi:", replyMarkup);
+}
+
+function handleCallbackQuery(callbackQuery) {
+  var chatId = callbackQuery.message.chat.id;
+  var buttonType = callbackQuery.data;
+
+  if (buttonType.startsWith("button_")) {
+    // Jika tombol utama diklik, tampilkan tombol sub
+    sendSubButtons(chatId, buttonType);
+  } else if (buttonType.startsWith("sub_button_")) {
+    // Jika tombol sub diklik, tampilkan data atau lakukan aksi yang sesuai
+    handleSubButton(chatId, buttonType);
+  }
+}
+
+function handleSubButton(chatId, subButtonType) {
+  var responseText = "";
+
+  switch (subButtonType) {
+    case "sub_button_config_pajak":
+      responseText = "Anda memilih Config untuk Pajak.";
+      break;
+
+    case "sub_button_sdb_pajak":
+      responseText = "Anda memilih SDB untuk Pajak. Data akan ditampilkan di sini.";
+      break;
+
+    case "sub_button_config_bi":
+      responseText = "Anda memilih Config untuk Bank Indonesia.";
+      break;
+
+    case "sub_button_sdb_bi":
+      responseText = "Anda memilih SDB untuk Bank Indonesia. Data akan ditampilkan di sini.";
+      break;
+
+    // Add more cases as needed for other sub-buttons
+
+    default:
+      // Handle unknown sub-button type
+      responseText = "Aksi tidak diketahui.";
+  }
+
+  sendText(chatId, responseText);
+}
+
+function handleButtonInput(chatId, buttonText) {
+  // Memproses tombol non-/site di sini sesuai kebutuhan Anda
+  var responseText = "Anda mengetik: " + buttonText;
+  sendText(chatId, responseText);
+}
+
+function sendText(chatId, text, replyMarkup) {
+  var data = {
+    method: "post",
+    payload: {
+      method: "sendMessage",
+      chat_id: String(chatId),
+      text: text,
+      parse_mode: "HTML",
+      reply_markup: JSON.stringify(replyMarkup)
+    }
+  };
+
+  UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/', data);
+}
