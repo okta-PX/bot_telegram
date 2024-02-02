@@ -2,6 +2,7 @@ var token = "";
 var SheetID = "";
 
 
+
 function doPost(e) {
   var stringJson = e.postData.getDataAsString();
   var updates = JSON.parse(stringJson);
@@ -40,7 +41,7 @@ function sendMainButtons(chatId) {
   ];
 
   var replyMarkup = { inline_keyboard: buttons };
-  sendText(chatId, "Pilih lokasi:", replyMarkup);
+  sendText(chatId, "Pilih site:", replyMarkup);
 }
 
 function sendSubButtons(chatId, buttonType) {
@@ -68,7 +69,7 @@ function sendSubButtons(chatId, buttonType) {
   }
 
   var replyMarkup = { inline_keyboard: buttons };
-  sendText(chatId, "Pilih opsi:", replyMarkup);
+  sendText(chatId, "Pilih data:", replyMarkup);
 }
 
 function handleCallbackQuery(callbackQuery) {
@@ -116,7 +117,7 @@ function handleSubButton(chatId, subButtonType) {
 
 function handleButtonInput(chatId, buttonText) {
   // Memproses tombol non-/site di sini sesuai kebutuhan Anda
-  var responseText = "Anda mengetik: " + buttonText;
+  var responseText = "ID tidak terdaftar, ketik /site menampilkan data";
   sendText(chatId, responseText);
 }
 
