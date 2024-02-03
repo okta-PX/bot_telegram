@@ -1,5 +1,7 @@
-var token = "";
-var SheetID = "";
+var token = "x";
+var SheetID = "x";
+
+
 
 
 
@@ -33,11 +35,16 @@ function AmbilSheet2() {
   return rows || [];
 }
 
+// Opsi site=====================================================================
 function sendMainButtons(chatId) {
   var buttons = [
-    [{ text: "Pajak", callback_data: "button_pajak" }],
-    [{ text: "Bank Indonesia", callback_data: "button_bi" }],
-    [{ text: "Pasar Senen", callback_data: "button_pasar_senen" }]
+    [{ text: "All data kapal Merah putih", callback_data: "button_kplmerah_putih" }],
+    [{ text: "Kapal kelud", callback_data: "button_kelud" }],
+    [{ text: "Kapal Tilongkabila", callback_data: "button_tilongkabila" }],
+        [{ text: "Kapal nggapulu", callback_data: "button_nggapulu" }],
+     [{ text: "Kapal gunung dempo", callback_data: "button_gunung_dempo" }],
+    // Tombol Kembali ke Menu Utama
+    // [{ text: "Menu Utama", callback_data: "button_kembali" }]
   ];
 
   var replyMarkup = { inline_keyboard: buttons };
@@ -46,23 +53,77 @@ function sendMainButtons(chatId) {
 
 function sendSubButtons(chatId, buttonType) {
   var buttons = [];
-
+// data sub menu 2 =====================================================================
   switch (buttonType) {
-    case "button_pajak":
+    // All Kapal
+    case "button_kplmerah_putih":
       buttons = [
-        [{ text: "Config", callback_data: "sub_button_config_pajak" }],
-        [{ text: "SDB", callback_data: "sub_button_sdb_pajak" }]
+        [{ text: "All Merah putih", callback_data: "sub_button_config_pajak" }],
+        // Tombol Kembali ke Menu Utama di bawah setiap data config
+        [{ text: "Menu Utama", callback_data: "button_kembali" }]
       ];
       break;
 
-    case "button_bi":
+// data kelud
+    case "button_kelud":
       buttons = [
-        [{ text: "Config", callback_data: "sub_button_config_bi" }],
-        [{ text: "SDB", callback_data: "sub_button_sdb_bi" }]
+        [{ text: "Config", callback_data: "sub_button_config_kelud" }],
+         [{ text: "SDB", callback_data: "sub_button_sdb_kelud" }],
+          [{ text: "Aset", callback_data: "sub_button_aset_kelud" }],
+           [{ text: "Markonis kapal", callback_data: "sub_button_markonis_kelud" }],
+        // Tombol Kembali ke Menu Utama di bawah setiap data config
+        [{ text: "Menu Utama", callback_data: "button_kembali" }]
       ];
       break;
 
     // Add more cases as needed for other buttons
+
+// data tilong
+    case "button_tilongkabila":
+      buttons = [
+        [{ text: "Config", callback_data: "sub_button_config_tilongkabila" }],
+         [{ text: "SDB", callback_data: "sub_button_sdb_tilongkabila" }],
+          [{ text: "Aset", callback_data: "sub_button_aset_tilongkabila" }],
+            [{ text: "Markonis kapal", callback_data: "sub_button_markonis_tilongkabila" }],
+        // Tombol Kembali ke Menu Utama di bawah setiap data config
+        [{ text: "Menu Utama", callback_data: "button_kembali" }]
+      ];
+      break;
+
+    // Add more cases as needed for other buttons
+
+
+// data gunung dempo
+    case "button_gunung_dempo":
+      buttons = [
+        [{ text: "Config", callback_data: "sub_button_config_gunung_dempo" }],
+         [{ text: "SDB", callback_data: "sub_button_sdb_gunung_dempo" }],
+          [{ text: "Aset", callback_data: "sub_button_aset_gunung_dempo" }],
+            [{ text: "Markonis kapal", callback_data: "sub_button_markonis_gunung_dempo" }],
+        // Tombol Kembali ke Menu Utama di bawah setiap data config
+        [{ text: "Menu Utama", callback_data: "button_kembali" }]
+      ];
+      break;
+
+    // Add more cases as needed for other buttons
+
+
+
+
+// data nggapulu
+    case "button_nggapulu":
+      buttons = [
+        [{ text: "Config", callback_data: "sub_button_config_nggapulu" }],
+         [{ text: "SDB", callback_data: "sub_button_sdb_nggapulu" }],
+          [{ text: "Aset", callback_data: "sub_button_aset_nggapulu" }],
+            [{ text: "Markonis kapal", callback_data: "sub_button_markonis_nggapulu" }],
+        // Tombol Kembali ke Menu Utama di bawah setiap data config
+        [{ text: "Menu Utama", callback_data: "button_kembali" }]
+      ];
+      break;
+
+    // Add more cases as needed for other buttons
+
 
     default:
       // Handle unknown button type
@@ -76,7 +137,10 @@ function handleCallbackQuery(callbackQuery) {
   var chatId = callbackQuery.message.chat.id;
   var buttonType = callbackQuery.data;
 
-  if (buttonType.startsWith("button_")) {
+  if (buttonType === "button_kembali") {
+    // Tombol kembali ke menu utama
+    sendMainButtons(chatId);
+  } else if (buttonType.startsWith("button_")) {
     // Jika tombol utama diklik, tampilkan tombol sub
     sendSubButtons(chatId, buttonType);
   } else if (buttonType.startsWith("sub_button_")) {
@@ -88,36 +152,124 @@ function handleCallbackQuery(callbackQuery) {
 function handleSubButton(chatId, subButtonType) {
   var responseText = "";
 
+
+// data akhir yang di tampilkan ke user=====================================================================
   switch (subButtonType) {
     case "sub_button_config_pajak":
-      responseText = "Anda memilih Config untuk Pajak.";
+      responseText = "▪All data kapal merah putih\nhttps://drive.google.com/drive/folders/1aedISGRZaEBpW2H1ODEkF-QbkW1_ksFE?usp=drive_link";
       break;
 
     case "sub_button_sdb_pajak":
       responseText = "Anda memilih SDB untuk Pajak. Data akan ditampilkan di sini.";
       break;
 
-    case "sub_button_config_bi":
-      responseText = "Anda memilih Config untuk Bank Indonesia.";
+
+// Data kelud
+    case "sub_button_config_kelud":
+      responseText = "Config kelud belum di input";
       break;
 
-    case "sub_button_sdb_bi":
-      responseText = "Anda memilih SDB untuk Bank Indonesia. Data akan ditampilkan di sini.";
+    case "sub_button_sdb_kelud":
+      responseText = "SDB kelud belum di input";
+      break;
+
+      
+    case "sub_button_aset_kelud":
+      responseText = "▪Data Aset kelud\nhttps://drive.google.com/drive/folders/1qoUKoUd6eEbI2EXk8YjPlGis3TMrmiav?usp=drive_link ";
+      break;
+
+         case "sub_button_markonis_kelud":
+      responseText = "Markonis kelud\n▪Pak arista\nWa.me/6281310109173 ";
       break;
 
     // Add more cases as needed for other sub-buttons
+
+
+    // Data tilongkabila
+    case "sub_button_config_tilongkabila":
+      responseText = "▪️Config Tilongkabila\nhttps://drive.google.com/file/d/1Ypb1lL_8cVKnWoGI5S8kWSQffmzNOv3b/view?usp=drive_link";
+      break;
+
+    case "sub_button_sdb_tilongkabila":
+      responseText = "🟩Kapal Tilongkabila 5Lt, 2 Sector\n▪️Sec 1. Lt 4 - Lt 6\n SN:219107735852\n▫Band | PCI | BCH | Cel | RRU       \n▫️ 900  |   48 |    5    |        | \n\n▪️Sec 2. Lt 2 - Lt 3   \nSN:219107735852   \n▫Band | PCI | BCH | Cel | RRU        \n▫️ 900  |   63 |    7    |        |";
+      break;
+
+      
+    case "sub_button_aset_tilongkabila":
+      responseText = "▪Data Aset tilongkabila\nhttps://drive.google.com/drive/folders/1bNjcPBPRDIgwqDJi2WFbT8n5bSX_wAcJ?usp=drive_link ";
+      break;
+
+
+  case "sub_button_markonis_tilongkabila":
+      responseText = "Markonis Tilongkabila\n▪Pak rohman\nWa.me/6281380006014\n▪Pak aji\nWa.me/62813-4523-2936";
+      break;
+    // Add more cases as needed for other sub-buttons
+
+
+
+
+    // Data gunung dempo
+    case "sub_button_config_gunung_dempo":
+      responseText = "Data config gunung dempo belum di input";
+      break;
+
+    case "sub_button_sdb_gunung_dempo":
+      responseText = "🟩Kapal Gunung dempo 5Lt, 2 Sector\n▪️Sec 1. Lt 5 - Lt 7\n SN:219107735852\n▫Band | PCI | BCH | Cel | RRU       \n▫️ 900  |   56 |        |        | \n\n▪️Sec 2. Lt 2 - Lt 3   \nSN:219107735852   \n▫Band | PCI | BCH | Cel | RRU        \n▫️ 900  |   42 |    3    |        |";
+      break;
+
+      
+    case "sub_button_aset_gunung_dempo":
+      responseText = "▪Data Aset Gunung Dempo\nhttps://drive.google.com/drive/folders/1Bxm4r1vpwT_Kr4gelPMkrbpcjSYFjolc?usp=drive_link ";
+      break;
+
+
+  case "sub_button_markonis_gunung_dempo":
+      responseText = "Markonis Gunung dempo\n▪Pak Toto\nwa.me/6281230014425\n▪Pak Aris \nwa.me/6281256708508";
+      break;
+    // Add more cases as needed for other sub-buttons
+
+
+
+
+    // Data nggapulu
+    case "sub_button_config_nggapulu":
+      responseText = "Data config nggapulu belum di input";
+      break;
+
+    case "sub_button_sdb_nggapulu":
+      responseText = "🟩Kapal nggapulu, 2 Sector\n▪️Sec 1\n SN:219214541589\n▫Band | PCI | BCH | Cel | RRU       \n▫️ 900  |   41 |    3   |        | \n\n▪️Sec 2. Lt 2 - Lt 3   \nSN:219214541589   \n▫Band | PCI | BCH | Cel | RRU        \n▫️ 900  |   55 |    7    |        |";
+      break;
+
+      
+    case "sub_button_aset_nggapulu":
+      responseText = "▪Data Aset Nggapulu\nhttps://drive.google.com/drive/folders/1zBxgSzCAuAmKCUr0LkYtgv9z_q-9X6Xm?usp=drive_link ";
+      break;
+
+
+  case "sub_button_markonis_nggapulu":
+      responseText = "Markonis Nggapulu\n▪Pak Abu Syofyan\nwa.me/628123283479";
+      break;
+    // Add more cases as needed for other sub-buttons
+
+
+
+
 
     default:
       // Handle unknown sub-button type
       responseText = "Aksi tidak diketahui.";
   }
 
-  sendText(chatId, responseText);
+  // Tombol Kembali ke Menu Utama di bawah setiap data config
+  var buttons = [[{ text: "Menu Utama", callback_data: "button_kembali" }]];
+  var replyMarkup = { inline_keyboard: buttons };
+
+  sendText(chatId, responseText, replyMarkup);
 }
 
 function handleButtonInput(chatId, buttonText) {
   // Memproses tombol non-/site di sini sesuai kebutuhan Anda
-  var responseText = "ID tidak terdaftar, ketik /site menampilkan data";
+  var responseText = "ID tidak terdaftar, ketik /site untuk menampilkan data, atau klik menu di bawah kiri layar anda";
   sendText(chatId, responseText);
 }
 
